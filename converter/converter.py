@@ -1,21 +1,54 @@
+import prompt
+
 CM_IN_M = 100
+MM_IN_CM = 10
+
 
 def convert():
-    print("Типы конвертации: \n 1. Сантиметры в метры\n 2. Метры в сантиметры")
-    
-    convert_type = int(input('Выберите тип конвертации:'))
+    data = [
+        {
+            'key': 1,
+            'from_type': 'CM',
+            'to_type': 'M',
+            'handler': lambda number: number / CM_IN_M,
+        },
+        {
+            'key': 2,
+            'from_type': 'M',
+            'to_type': 'CM',
+            'handler': lambda number: number * CM_IN_M,
+        },
+        {
+            'key': 3,
+            'from_type': 'CM',
+            'to_type': 'MM',
+            'handler': lambda number: number * MM_IN_CM,
+        },
+        {
+            'key': 4,
+            'from_type': 'ММ',
+            'to_type': 'СМ',
+            'handler': lambda number: number / MM_IN_CM,
+        },
+    ]
 
-    number = int(input('Введите значение для перевода: '))
+    print('Типы конвертации:')
+    for item in data:
+        key = item.get('key')
+        from_type = item.get('from_type')
+        to_type = item.get('to_type')
+        print(f'{key}. {from_type} -> {to_type}')
 
-    if convert_type == 1:
-        converted_number = number / CM_IN_M
-        from_type = 'CM'
-        to_type = 'M'
-    elif convert_type == 2:
-        converted_number = number * CM_IN_M
-        from_type = 'M'
-        to_type = 'CM'
-    else:
-        raise 'Неизвестный тип конвертации'
+    convert_type = prompt.integer('Выберите тип конвертации:')
 
-    print(f'{number} {from_type} = {converted_number} {to_type}')
+    number = prompt.real('Введите значение для перевода: ')
+
+    for item in data:
+        if convert_type == item.get('key'):
+            converted_number = item.get('handler')(number)
+            from_type = item.get('from_type')
+            to_type = item.get('to_type')
+            print(f'{number} {from_type} = {converted_number} {to_type}')
+            return
+
+    raise 'Неизвестный тип конвертации'
